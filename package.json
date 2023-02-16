@@ -4,7 +4,7 @@
   "description": "a simple product api with typescript, express, mongodb etc",
   "main": "dist/app.js",
   "scripts": {
-    "build": "tsc -p . -w",
+    "build": "tsc",
     "dev": "nodemon .",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1"
