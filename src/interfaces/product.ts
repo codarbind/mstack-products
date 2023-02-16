@@ -7,4 +7,22 @@ export default interface Product extends Document {
   description: string;
   price: number;
   deleted: boolean;
+  _id?: string;
+  createdAt?: string;
+  updatedAt: string;
+}
+
+export interface ProductFilter {
+  name?: string;
+  description?: string;
+  price?: number;
+  deleted?: boolean;
+  _id?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Pagination {
+  skip?: number;
+  limit?: number;
 }

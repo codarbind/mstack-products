@@ -1,9 +1,11 @@
 /** @format */
 
 import { NextFunction, Request, Response } from "express";
-import mongoose, { isValidObjectId } from "mongoose";
+import { isValidObjectId } from "mongoose";
+import product from "../models/product";
 //import Product from "../interfaces/product";
 import Product from "../models/product";
+import * as productRepo from "../repo/product";
 
 const createProduct = async (
   req: Request,
@@ -40,24 +42,17 @@ const getOneProductById = async (
 ) => {
   try {
     let { id } = req.query;
-    if (!isValidObjectId(id))
+    console.log({ id });
+    if (typeof id !== "string" || !isValidObjectId(id))
       return res.status(400).send({
         success: false,
         message: "failed - invalid id",
         data: {},
       });
-    let retrievedProduct = await Product.findOne({ _id: id, deleted: false });
-    if (!retrievedProduct)
-      return res.status(404).send({
-        success: false,
-        message: "product not found",
-        data: {},
-      });
-    return res.status(200).send({
-      success: true,
-      message: "product found",
-      data: { ...retrievedProduct["_doc"] },
-    });
+
+    let getProd = await productRepo.findOne({ _id: id, deleted: false });
+    if (!getProd.success) return res.status(404).send({ ...getProd });
+    return res.status(200).send(getProd);
   } catch (err) {
     console.log({ err });
     return res.status(500).send({
@@ -73,7 +68,7 @@ const getAllProducts = async (
   res: Response,
   next: NextFunction
 ) => {
-  let { id } = req.query;
+  let { id, limit, skip } = req.query;
 
   try {
     if (id && !isValidObjectId(id))
@@ -82,20 +77,16 @@ const getAllProducts = async (
         message: "invalid id used",
         data: {},
       });
-    let retrievedProducts = id
-      ? await Product.findById({ id, deleted: false })
-      : await Product.find({ deleted: false });
-    if (!retrievedProducts)
-      return res.status(404).send({
-        success: false,
-        message: "product not found",
-        data: {},
-      });
-    return res.status(200).send({
-      success: true,
-      message: "products found",
-      data: { products: retrievedProducts },
-    });
+    let retrievedProducts =
+      typeof id === "string"
+        ? await productRepo.findOne({ _id: id, deleted: false })
+        : await productRepo.findMany(
+            { deleted: false },
+            { limit: Number(limit), skip: Number(skip) }
+          );
+    if (!retrievedProducts.success)
+      return res.status(404).send({ ...retrievedProducts });
+    return res.status(200).send({ ...retrievedProducts });
   } catch (err) {
     console.log({ err });
     return res.status(500).send({
@@ -120,19 +111,17 @@ const updateProduct = async (
         message: "invalid id sent",
         data: {},
       });
-    let updatedProduct = await Product.updateOne(
-      { id, deleted: false },
-      { name, description, price, deleted }
-    );
-    if (!updatedProduct)
-      res
-        .status(500)
-        .send({ success: false, message: "product not updated", data: {} });
-    res.status(200).send({
-      success: true,
-      message: "product updated",
-      data: {},
+
+    let upProd = await productRepo.updateOneById(id, {
+      name,
+      description,
+      price,
+      deleted,
     });
+    console.log("ju ", upProd);
+
+    if (!upProd) return res.status(400).send({ ...upProd });
+    return res.status(200).send({ ...upProd });
   } catch (err) {
     console.log({ err });
     return res.status(500).send({
