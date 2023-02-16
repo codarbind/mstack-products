@@ -36,7 +36,6 @@ const updateOneById = async (id: string, data: ProductFilter) => {
     if (!isValidObjectId(id))
       return { success: false, message: "not a valid product id", data: {} };
     let prod = await findOne({ _id: id });
-    console.log({ prod });
     if (!prod.success)
       return { success: false, message: "not found", data: {} };
     let upProd = await product.updateOne({ _id: id }, data, { new: true });

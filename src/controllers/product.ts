@@ -118,7 +118,6 @@ const updateProduct = async (
       price,
       deleted,
     });
-    console.log("ju ", upProd);
 
     if (!upProd) return res.status(400).send({ ...upProd });
     return res.status(200).send({ ...upProd });
