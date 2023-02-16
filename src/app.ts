@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import config from "./configs/dbconfig";
 /**connect to mongoose */
+mongoose.set('strictQuery' , true)
 mongoose
   .connect(config.mongo.url, config.mongo.options)
   .then((result) => {

@@ -43,7 +43,7 @@ const getOneProductById = async (
     if (!isValidObjectId(id))
       return res.status(400).send({
         success: false,
-        message: "invalid id",
+        message: "failed - invalid id",
         data: {},
       });
     let retrievedProduct = await Product.findById({ _id:id, deleted: false });
@@ -74,35 +74,35 @@ const getAllProducts = async (
   res: Response,
   next: NextFunction
 ) => {
-  let id = req.query;
+  let {id} = req.query;
+
   try {
-    if (!isValidObjectId(id))
+    if (id && !isValidObjectId(id))
       return res.status(400).send({
         success: false,
-        message: "invalid id",
+        message: "invalid id used",
         data: {},
       });
     let retrievedProducts = id
       ? await Product.findById({ id, deleted: false })
       : await Product.find({ deleted: false });
-    console.log({ retrievedProducts });
     if (!retrievedProducts)
-      return res.status(404).send({
+      return res.status(404).send({ 
         success: false,
         message: "product not found",
         data: {},
       });
     return res.status(200).send({
       success: true,
-      message: "products found",
-      data: { ...retrievedProducts },
+      message: "products found", 
+      data: { products:retrievedProducts },
     });
   } catch (err) {
     console.log({ err });
     return res.status(500).send({
       success: false,
       message: "something went wrong",
-      data: {},
+      data: { },
     });
   }
 };
@@ -118,7 +118,7 @@ const updateProduct = async (
     if (!isValidObjectId(id))
       return res.status(400).send({
         success: false,
-        message: "invalid id",
+        message: "invalid id sent",
         data: {},
       });
     let updatedProduct = await Product.updateOne(
