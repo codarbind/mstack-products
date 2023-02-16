@@ -13,8 +13,6 @@ const createProduct = async (
   try {
     let { name, description, price } = req.body;
     let createdProduct = await new Product({ name, description, price }).save();
-    console.log({ createdProduct });
-    console.log({ jso: JSON.stringify(createdProduct) });
     if (!createdProduct)
       res
         .status(500)
@@ -23,7 +21,7 @@ const createProduct = async (
     res.status(200).send({
       success: true,
       message: "product created",
-      data: { ...createdProduct },
+      data: { ...createdProduct['_doc']},
     });
   } catch (err) {
     console.log({ err });
