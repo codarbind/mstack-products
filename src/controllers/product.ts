@@ -39,14 +39,14 @@ const getOneProductById = async (
   next: NextFunction
 ) => {
   try {
-    let id = req.query;
+    let {id} = req.query;
     if (!isValidObjectId(id))
       return res.status(400).send({
         success: false,
         message: "invalid id",
         data: {},
       });
-    let retrievedProduct = await Product.findById({ id, deleted: false });
+    let retrievedProduct = await Product.findById({ _id:id, deleted: false });
     console.log({ retrievedProduct });
     if (!retrievedProduct)
       return res.status(404).send({
@@ -57,7 +57,7 @@ const getOneProductById = async (
     return res.status(200).send({
       success: true,
       message: "product found",
-      data: { ...retrievedProduct },
+      data: { ...retrievedProduct['_doc'] },
     });
   } catch (err) {
     console.log({ err });
