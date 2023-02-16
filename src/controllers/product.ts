@@ -21,7 +21,7 @@ const createProduct = async (
     res.status(200).send({
       success: true,
       message: "product created",
-      data: { ...createdProduct['_doc']},
+      data: { ...createdProduct["_doc"] },
     });
   } catch (err) {
     console.log({ err });
@@ -39,15 +39,14 @@ const getOneProductById = async (
   next: NextFunction
 ) => {
   try {
-    let {id} = req.query;
+    let { id } = req.query;
     if (!isValidObjectId(id))
       return res.status(400).send({
         success: false,
         message: "failed - invalid id",
         data: {},
       });
-    let retrievedProduct = await Product.findById({ _id:id, deleted: false });
-    console.log({ retrievedProduct });
+    let retrievedProduct = await Product.findOne({ _id: id, deleted: false });
     if (!retrievedProduct)
       return res.status(404).send({
         success: false,
@@ -57,7 +56,7 @@ const getOneProductById = async (
     return res.status(200).send({
       success: true,
       message: "product found",
-      data: { ...retrievedProduct['_doc'] },
+      data: { ...retrievedProduct["_doc"] },
     });
   } catch (err) {
     console.log({ err });
@@ -74,7 +73,7 @@ const getAllProducts = async (
   res: Response,
   next: NextFunction
 ) => {
-  let {id} = req.query;
+  let { id } = req.query;
 
   try {
     if (id && !isValidObjectId(id))
@@ -87,22 +86,22 @@ const getAllProducts = async (
       ? await Product.findById({ id, deleted: false })
       : await Product.find({ deleted: false });
     if (!retrievedProducts)
-      return res.status(404).send({ 
+      return res.status(404).send({
         success: false,
         message: "product not found",
         data: {},
       });
     return res.status(200).send({
       success: true,
-      message: "products found", 
-      data: { products:retrievedProducts },
+      message: "products found",
+      data: { products: retrievedProducts },
     });
   } catch (err) {
     console.log({ err });
     return res.status(500).send({
       success: false,
       message: "something went wrong",
-      data: { },
+      data: {},
     });
   }
 };
@@ -132,7 +131,7 @@ const updateProduct = async (
     res.status(200).send({
       success: true,
       message: "product updated",
-      data: { ...updatedProduct },
+      data: {},
     });
   } catch (err) {
     console.log({ err });
