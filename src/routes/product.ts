@@ -12,10 +12,9 @@ import {
 const router = Router();
 
 router.post("/add", createProduct);
-router.delete("/delete/:id", deleteProductPermanently);
+router.delete("/:id", deleteProductPermanently);
 router.get("/", getOneProductById);
 router.get("/all", getAllProducts);
 router.patch("/:id", updateProduct);
-router.post("/kll");
 
 module.exports = { router };

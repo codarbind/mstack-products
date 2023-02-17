@@ -136,7 +136,6 @@ const deleteProductPermanently = async (
   next: NextFunction
 ) => {
   let { id } = req.params;
-  console.log("the id ", id);
   try {
     if (!isValidObjectId(id))
       return res.status(400).send({
@@ -146,7 +145,6 @@ const deleteProductPermanently = async (
       });
 
     let deleteProd = await productRepo.deleteOneById(id);
-    console.log({ deleteProd });
     if (!deleteProd.success) return res.status(400).send({ ...deleteProd });
     return res.status(200).send({ ...deleteProd });
   } catch (error) {
