@@ -45,7 +45,24 @@ const updateOneById = async (id: string, data: ProductFilter) => {
     return { success: true, message: "updated", data: updatedProd.data };
   } catch (error) {
     console.log({ error });
+    return { success: false, message: "an error occurred", data: {} };
   }
 };
 
-export { findOne, findMany, updateOneById };
+const deleteOneById = async (id: string) => {
+  try {
+    if (!isValidObjectId(id))
+      return { success: false, message: "not a valid product id", data: {} };
+    let delProd = await product.deleteOne({ _id: id });
+    console.log({ delProd });
+    if (!delProd)
+      return { success: false, message: "failed to delete", data: {} };
+    if (delProd)
+      return { success: true, message: "deleted permanently", data: {} };
+  } catch (error) {
+    console.log({ error });
+    return { success: false, message: "an error occurred", data: {} };
+  }
+};
+
+export { findOne, findMany, updateOneById, deleteOneById };
