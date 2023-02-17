@@ -2,7 +2,6 @@
 
 import { NextFunction, Request, Response } from "express";
 import { isValidObjectId } from "mongoose";
-import product from "../models/product";
 //import Product from "../interfaces/product";
 import Product from "../models/product";
 import * as productRepo from "../repo/product";
@@ -119,7 +118,7 @@ const updateProduct = async (
       deleted,
     });
 
-    if (!upProd) return res.status(400).send({ ...upProd });
+    if (!upProd.success) return res.status(400).send({ ...upProd });
     return res.status(200).send({ ...upProd });
   } catch (err) {
     console.log({ err });
@@ -131,4 +130,37 @@ const updateProduct = async (
   }
 };
 
-export { createProduct, getOneProductById, getAllProducts, updateProduct };
+const deleteProductPermanently = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  let { id } = req.params;
+  try {
+    if (!isValidObjectId(id))
+      return res.status(400).send({
+        success: false,
+        message: "invalid id sent",
+        data: {},
+      });
+
+    let deleteProd = await productRepo.deleteOneById(id);
+    if (!deleteProd.success) return res.status(400).send({ ...deleteProd });
+    return res.status(200).send({ ...deleteProd });
+  } catch (error) {
+    console.log({ error });
+    return res.status(500).send({
+      success: false,
+      message: "something went wrong",
+      data: {},
+    });
+  }
+};
+
+export {
+  createProduct,
+  getOneProductById,
+  getAllProducts,
+  updateProduct,
+  deleteProductPermanently,
+};

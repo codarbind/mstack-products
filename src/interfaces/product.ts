@@ -20,6 +20,7 @@ export interface ProductFilter {
   _id?: string;
   createdAt?: string;
   updatedAt?: string;
+  __v?: number;
 }
 
 export interface Pagination {
