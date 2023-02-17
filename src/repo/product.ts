@@ -53,11 +53,13 @@ const deleteOneById = async (id: string) => {
   try {
     if (!isValidObjectId(id))
       return { success: false, message: "not a valid product id", data: {} };
+    let prodExist = await findOne({ _id: id });
+    if (!prodExist.success)
+      return { success: false, message: "product not found", data: {} };
     let delProd = await product.deleteOne({ _id: id });
-    console.log({ delProd });
-    if (!delProd)
+    if (delProd.deletedCount === 0)
       return { success: false, message: "failed to delete", data: {} };
-    if (delProd)
+    if (delProd.deletedCount === 1)
       return { success: true, message: "deleted permanently", data: {} };
   } catch (error) {
     console.log({ error });
