@@ -2,7 +2,7 @@
   "name": "mainstack-product",
   "version": "1.0.0",
   "description": "a simple product api with typescript, express, mongodb etc",
-  "main": "dist/app.js",
+  "main": "dist/src/app.js",
   "scripts": {
     "build": "tsc",
     "dev": "nodemon .",
